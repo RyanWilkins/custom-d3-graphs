@@ -1,0 +1,56 @@
+
+
+
+.line-path {
+  fill: maroon;
+}
+
+text {
+  font-family: sans-serif;
+}
+
+.tick text {
+  font-size: 2em;
+  fill: #635F5D;
+}
+
+.tick line {
+  stroke: #C0C0BB;
+}
+
+.axis-label {
+  font-size: 5em;
+  fill: #8E8883;
+}
+
+.title {
+  font-size: 3.7em;
+  fill: #635F5D;
+  text-anchor: middle;
+}
+
+/* Standard graph title */
+.graphTitle{
+  alignment-baseline:ideographic;
+  font-family: Roboto 'sans-serif';
+  font-size: 1.5em;
+}
+
+/* Bars on Bar Graph */
+.graphBar{
+  stroke: black;
+  stroke-width: 1px;
+}
+
+
+/* Standard Legend Styling */
+
+.legendLabel{
+  font-size: 18px;
+  alignment-baseline: middle;
+}
+
+.legendSquare{
+  stroke:black;
+  stroke-width: 2;
+}

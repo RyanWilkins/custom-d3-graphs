@@ -22,31 +22,68 @@ export const standardLegend = (graph,
                         .domain(entries)
                         .range([0,legendDim.legendHeight])
                                              
-    // Cerate group for Legend
-    const legendGroup = graph.append("g")
+    // Create group for Legend
+    const legendGroup = graph.selectAll(".graphLegend")
+        .data([null])
+
+    const legendGroupEnter = legendGroup
+    .enter()
+        .append("g")
         .attr("class", "graphLegend")
         .attr("id", graph_id + "_legend")
         .attr("transform", `translate(${legendDim.xOffset},${legendDim.yOffset})`)
+    .merge(legendGroup)
+        //.attr("transform", `translate(${legendDim.xOffset},${legendDim.yOffset})`)
 
-    const legendEntry =  legendGroup
-        .selectAll(null)      
-        .data(entries)     
+    const legend =  legendGroupEnter
+        .selectAll(".legendEntry")      
+        .data(entries, (e,i) => e+i)
+
+    console.log(entries, entries.map(d => colorMap(d)))
+        
+    const legendEntry = legend
         .enter()
-        .append('g')
-        .attr("class", "legendEntry")
+            .append('g')
+            .attr("class", "legendEntry")
 
     legendEntry.append('rect')
         .attr('class', 'legendSquare')
-        .attr('y', d => legendScale(d))
-        .attr('width', legendDim.boxDim)
-        .attr('height', legendDim.boxDim)
-        .attr('fill', d => colorMap(d))
+        .merge(legend.selectAll(".legendSquare"))
+            .attr('y', d => legendScale(d))
+            .attr('width', legendDim.boxDim)
+            .attr('height', legendDim.boxDim)
+            .attr('fill', d => colorMap(d))
 
     legendEntry.append('text')
         .attr('class', 'legendLabel')
-        .attr('x', legendDim.boxDim + legendDim.labelPad)
-        .attr('y', d => legendScale(d) + legendDim.boxDim/2)
         .text(d => d)
+        .merge(legend.selectAll(".legendLabel"))
+            .attr('x', legendDim.boxDim + legendDim.labelPad)
+            .attr('y', d => legendScale(d) + legendDim.boxDim/2)
+            
 
+    legend.exit().remove()
 
                         }
+
+/* Fancy-fy charts with highlights on mouseover */
+export const seriesHighlights = (graph,
+                                    selector) => {
+
+        graph.selectAll(selector)
+        .on('mouseover', function(d,i){
+        var cur_series = d3.select(this).attr('class').split(" ").filter(v => {return /__series/.test(v)});
+        d3.selectAll("." + cur_series).transition()
+        .duration(100)
+        .style("fill-opacity", 0.7)
+        })
+
+        graph.selectAll(selector)
+        .on('mouseout', function(d,i){
+        var cur_series = d3.select(this).attr('class').split(" ").filter(v => {return /__series/.test(v)});
+        d3.selectAll("." + cur_series).transition()
+        .duration(100)
+        .style("fill-opacity", 1)
+        })
+
+}

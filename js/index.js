@@ -90,6 +90,43 @@ const testdata =  d3.csv("../testdata/catdata.csv").then((data) => {
     d3barchart(bcsvg, data, "mybc", {height : +bcsvg.attr("height"), width : +bcsvg.attr("width")},
         {top: 40, bottom: 40, left: 50, right: 10},
         true);
+    /*d3.selectAll(".value__series")
+        .attr("fill","orange").style("fill-opacity", 1)
+        .exit()
+            .transition().duration(500)
+            .attr("height", 0)
+            .remove();*/
+
+    //console.log(data)
+    var datatwo = data.map(x => {var y = Object.assign({},x);
+                                y.key3 = y.value*2;
+                                return y;
+                            })
+    datatwo.columns = [...data.columns]
+    datatwo.columns.push("key3")
+
+    //console.log(datatwo);
+    //console.log(data);
+    for (var i = 0; i < data.length;i++){
+        delete data[i].otherval
+    }
+
+   /* setTimeout(() =>{
+        d3.select("#mybc").html(null)
+        d3barchart(bcsvg, datatwo, "mybc", {height : +bcsvg.attr("height"), width : +bcsvg.attr("width")},
+        {top: 40, bottom: 40, left: 50, right: 10},
+        true);
+    },3000)*/
+    setTimeout (() => {
+        //data.pop();
+        // console.log(data); 
+        //d3.select("#mybc").html(null)
+        d3barchart(bcsvg, data, "mybc", {height : +bcsvg.attr("height"), width : +bcsvg.attr("width")},
+        {top: 40, bottom: 40, left: 50, right: 10},
+        true);
+    },3000) 
+
+ 
 })
 
 //const datasource = "../testdata/catdata.csv";

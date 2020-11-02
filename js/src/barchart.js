@@ -17,7 +17,33 @@
 
 
 import {p_bg, p_cat, p_seq} from './palettes.js';
-import {standardLegend} from './standardBase.js';
+import {standardLegend, seriesHighlights} from './standardBase.js';
+
+/* Function to retrieve the correct X/Y values for bars.
+This function takes a in a d3 formatted object where:
+    input = {x_name:x_value, y_1:y_1_value ... }
+            for an arbitrary number of y values.
+Goal is to output:
+    output = { {x_name:x_value, y_1:y_1_value}, {x_name:x_value, y_2:y_2_value} ...)
+This allows for the d3 Data function to identify each entry individually */
+const deconstructXGroup = (data,
+                            x_name, x_val) =>{
+                                var output = [];
+                                var decon = d3.entries(data);
+                                //console.log(decon)
+                                decon.shift();        
+                                for (var i = 0; i <decon.length ; i++){
+                                    //console.log(pair)
+                                    var temp = {}
+                                    temp[x_name] = x_val
+                                    temp["variable"] = decon[i]["key"]
+                                    temp["value"] = decon[i]["value"]
+                                    output.push(temp)
+                                };
+                                //console.log(output)
+                                return(output);
+                            }
+
 
 export const d3barchart = (svg,
                             data, 
@@ -25,7 +51,8 @@ export const d3barchart = (svg,
                             dims = {height : 100, width : 100}, 
                             margin = {top: 10, bottom: 10, left: 10, right: 10},
                             showLegend = true,
-                            legendDim = {boxDim:15, labelPad: 5, xStart:0.85, yStart: 0, legendHeight: 100}
+                            legendDim = {boxDim:15, labelPad: 5, xStart:0.85, yStart: 0, legendHeight: 100},
+                            highlighter = true
                             ) => {
 
     const height = dims.height;
@@ -35,8 +62,8 @@ export const d3barchart = (svg,
     const innerHeight = height - margin.top - margin.bottom;
     const innerWidth = width - margin.left - margin.right;
 
-    console.log("full width is: " + width)
-    console.log("graph width is: " + innerWidth)
+    //console.log("full width is: " + width)
+    //console.log("graph width is: " + innerWidth)
 
     // Define Scales
     var xScale = d3.scaleBand().range([0,innerWidth]).padding(0.2);
@@ -44,17 +71,20 @@ export const d3barchart = (svg,
 
 
     // Start building the graph
-    var graph = svg.append('g')
-                    .attr('class', "standardGraph")
-                    .attr('class', "standardBarChart")
-                    .attr("id", graph_id)
-                    .attr("transform", `translate(${margin.left}, ${margin.top})`)
-                    
+    var graph = svg.selectAll(".standardBarChart")
+                    .data([null])
 
-    console.log("I ran")
+    var graphEnter = graph.enter()
+                        .append('g')
+                        .attr('class', "standardGraph standardBarChart")
+                        .attr("id", graph_id)
+                        .attr("transform", `translate(${margin.left}, ${margin.top})`)
+                    
+    var graphMerge = graphEnter.merge(graph)
+                        .attr("transform", `translate(${margin.left}, ${margin.top})`)
 
     // Title Section
-    graph.append('text')
+    graphEnter.append('text')
             .attr('class', "graphTitle")
             .attr('id', graph_id + "_title")
             .attr("transform", `translate(0, ${0})`)
@@ -85,37 +115,104 @@ export const d3barchart = (svg,
             .range(p_cat)
 
     // Axes
-    graph.append("g")
-        .attr("id", graph_id + "_xaxisgroup")
-        .attr("transform", `translate(0, ${innerHeight})`)
-        .call(d3.axisBottom(xScale));
 
-    graph.append("g")
+    // x axis
+    const xaxis = graphMerge.selectAll('.graph_xaxis')
+        .data([null])
+
+    xaxis.enter()
+        .append("g")
+        .attr("id", graph_id + "_xaxisgroup")
+        .attr("class", "graph_xaxis")
+        .attr("transform", `translate(0, ${innerHeight})`)
+        .call(d3.axisBottom(xScale))
+        .merge(xaxis)
+        .call(d3.axisBottom(xScale));
+    
+    xaxis.exit().remove();
+
+    // y axis
+    const yaxis = graphMerge.selectAll(".graph_yaxis")
+        .data([null])
+
+    yaxis.enter()
+        .append("g")
+        .attr("class", "graph_yaxis")
         .attr("id", graph_id + "_yaxisgroup")
-        .call(d3.axisLeft(yScale));
+        .call(d3.axisLeft(yScale))
+        .merge(yaxis)
+            .call(d3.axisLeft(yScale));
+    
+    yaxis.exit().remove()
+
+    /*graphMerge.append("g")
+        .attr("id", graph_id + "_yaxisgroup")
+        .call(d3.axisLeft(yScale));*/
     
     // Append data to bar chart
-    const barenter = graph.selectAll('.graphBar')
-        .data(data)
+    const barStart = graphMerge.selectAll('.graphXGroup')
+        .data(data, (e) => {
+            //console.log(x_name + e[x_name]);
+            return (x_name + e[x_name]);
+        })
+        
+    const barEnter = barStart.enter()
+
+    barStart.exit().remove()
+       
+    // For each row of the data, deconstruct it and 
+    // create a bar for each series value. XAxis groups are created.
+     const xgroupStart = barEnter 
+        .append("g")
+            .attr("class", "graphXGroup")
+            .attr("transform", (d,i) => {return (`translate(${xScale(d[x_name])},0)`)})
+            //.attr("asd", (d,i) => {console.log(d); return 0})
+        .merge(barStart) 
+            //.attr("transform", (d,i) => {return (`translate(${xScale(d[x_name])},0)`)})
+        .selectAll(".graphBar")
+            .data(d => {return deconstructXGroup(d,x_name,d[x_name])}, (e) => {
+                var barid = e[x_name] + e.variable;
+                //console.log(barid)
+                return(barid);
+            })
+
+    const xgroupenter = xgroupStart
         .enter()
-
-    // Loops through each of the y values
-    // and creates bars with width equal to
-    // x axis bandwidth divided by number of categories
-    var j = 0;
-    for (j = 0; j < y_names.length; j++){   
-     barenter       
         .append("rect")
-            .attr("class", "graphBar")
-            .attr("x", d => {return xScale(d[x_name]) + xScale.bandwidth()/y_names.length * j})
-            .attr("y", d => {return yScale(d[y_names[j]])})
-            .attr("width", xScale.bandwidth()/y_names.length)
-            .attr("height", d => {return (innerHeight - yScale(d[y_names[j]]))})
-            .attr("fill", d => {return (yCol(y_names[j]))})
-    }
+            .attr("class", (d,i) => "graphBar " + d.variable + "__series")
+            //.attr("x",(d,i) => xScale.bandwidth()/y_names.length * i)
+            //.attr("width", xScale.bandwidth()/y_names.length)
+            //.attr("y", d => {return yScale(d.value)})
+            //.attr("height", (d,i) => {return (innerHeight - yScale(d.value))})
+            .attr("fill", d => {return yCol(d.variable)})
+            .attr("y",0)
+        .merge(xgroupStart) 
+            .transition()
+            .duration(1000)
+                .attr("x",(d,i) => xScale.bandwidth()/y_names.length * i)
+                //.attr("y",0)
+                //.attr("y", d => {return yScale(d.value)})
+                .attr("fill", d => {return yCol(d.variable)})
+                .attr("height", (d,i) => {return (innerHeight - yScale(d.value))})
+                .attr("width", xScale.bandwidth()/y_names.length)
+                .attr("y", d => {return yScale(d.value)}) 
 
+            
+    const xgroupexit = xgroupStart
+        .exit()
+        .transition()
+        .duration(250)
+        .attr("opacity", 0.5)
+        .transition()
+        //.attr("ga", d => {console.log("removing element"); return 0})
+        .duration(1000)
+        .attr("y",innerHeight)
+        .attr("height", 0)
+        .remove()
+  
     // Create Legend
     if(showLegend){
+
         const legendDimAdj ={
             xOffset: width * legendDim.xStart + margin.left,
             yOffset: height * legendDim.yStart + margin.top,
@@ -124,41 +221,15 @@ export const d3barchart = (svg,
             legendHeight: legendDim.legendHeight
         }
 
-    standardLegend(graph, graph_id, y_names, yCol, legendDimAdj)
-   /*
-    // Vertical scale for legend placement
-        var legendScale = d3.scaleBand()
-                        .domain(y_names)
-                        .range([0,100])
+        standardLegend(graphMerge, graph_id, y_names, yCol, legendDimAdj)
 
+    }
 
-        const legendGroup = graph.append("g")
-            .attr("class", "graphLegend")
-            .attr("id", graph_id + "_legend")
-            .attr("transform", `translate(${width*legendDim.xStart + margin.left},${legendDim.yStart*height + margin.top})`)
-         
-        const legendEntry =  legendGroup
-            .selectAll(null)      
-            .data(y_names)     
-                .enter()
-                .append('g')
-                .attr("class", "legendEntry")
-    
-        legendEntry.append('rect')
-                    .attr('class', 'legendSquare')
-                    .attr('y', d => legendScale(d))
-                    .attr('width', legendDim.boxDim)
-                    .attr('height', legendDim.boxDim)
-                    .attr('fill', d => yCol(d))
-        
-        legendEntry.append('text')
-                    .attr('class', 'legendLabel')
-                    .attr('x', legendDim.boxDim + legendDim.labelPad)
-                    .attr('y', d => legendScale(d) + legendDim.boxDim/2)
-                    .text(d => d)
-    */
-                }
+    // Optional Embellishments
 
-    console.log("pause here")
+    // Highlighting on Mouseover
+    highlighter
+        ? seriesHighlights(graphEnter,".graphBar")
+        : null
 
 }

@@ -23,6 +23,8 @@ export const standardLegend = (graph,
                         .range([0,legendDim.legendHeight])
                                              
     // Create group for Legend
+    // This is the link that finally made this click:
+    // https://stackoverflow.com/questions/42730872/d3-merge-a-nested-selection
     const legendGroup = graph.selectAll(".graphLegend")
         .data([null])
 
@@ -33,13 +35,12 @@ export const standardLegend = (graph,
         .attr("id", graph_id + "_legend")
         .attr("transform", `translate(${legendDim.xOffset},${legendDim.yOffset})`)
     .merge(legendGroup)
-        //.attr("transform", `translate(${legendDim.xOffset},${legendDim.yOffset})`)
 
-    const legend =  legendGroupEnter
-        .selectAll(".legendEntry")      
-        .data(entries, (e,i) => e+i)
+    var legend =  legendGroupEnter
+        .selectAll(".legendEntry")
+        .data(entries, (e,i) => {return(e)})
 
-    console.log(entries, entries.map(d => colorMap(d)))
+    //console.log(entries, entries.map(d => legendScale(d)))
         
     const legendEntry = legend
         .enter()
@@ -48,21 +49,26 @@ export const standardLegend = (graph,
 
     legendEntry.append('rect')
         .attr('class', 'legendSquare')
-        .merge(legend.selectAll(".legendSquare"))
-            .attr('y', d => legendScale(d))
-            .attr('width', legendDim.boxDim)
-            .attr('height', legendDim.boxDim)
-            .attr('fill', d => colorMap(d))
+        .attr('fill', d => colorMap(d))
+        .attr('width', legendDim.boxDim)
+        .attr('height', legendDim.boxDim)
+        .attr('y', d => legendScale(d))
 
     legendEntry.append('text')
         .attr('class', 'legendLabel')
         .text(d => d)
-        .merge(legend.selectAll(".legendLabel"))
-            .attr('x', legendDim.boxDim + legendDim.labelPad)
-            .attr('y', d => legendScale(d) + legendDim.boxDim/2)
+        .attr('x', legendDim.boxDim + legendDim.labelPad)  
+        .attr('y', d => legendScale(d) + legendDim.boxDim/2)
             
-
     legend.exit().remove()
+
+    var legendUpdate =legendEntry.merge(legend)
+
+    legendUpdate.select('rect')
+        .attr('y', d => legendScale(d))
+
+    legendUpdate.select('text')
+    .attr('y', d => legendScale(d) + legendDim.boxDim/2)
 
                         }
 

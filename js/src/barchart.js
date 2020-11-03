@@ -52,7 +52,8 @@ export const d3barchart = (svg,
                             margin = {top: 10, bottom: 10, left: 10, right: 10},
                             showLegend = true,
                             legendDim = {boxDim:15, labelPad: 5, xStart:0.85, yStart: 0, legendHeight: 100},
-                            highlighter = true
+                            highlighter = true,
+                            animate = {in:true, out:true}
                             ) => {
 
     const height = dims.height;
@@ -180,19 +181,20 @@ export const d3barchart = (svg,
         .enter()
         .append("rect")
             .attr("class", (d,i) => "graphBar " + d.variable + "__series")
-            //.attr("x",(d,i) => xScale.bandwidth()/y_names.length * i)
+            .attr("x",(d,i) => xScale.bandwidth()/y_names.length * i)
             //.attr("width", xScale.bandwidth()/y_names.length)
             //.attr("y", d => {return yScale(d.value)})
             //.attr("height", (d,i) => {return (innerHeight - yScale(d.value))})
             .attr("fill", d => {return yCol(d.variable)})
-            .attr("y",0)
+            .attr("y",innerHeight) 
+            .attr("height",0)
         .merge(xgroupStart) 
             .transition()
-            .duration(1000)
+            .duration(animate.in ? 1000 :0) 
                 .attr("x",(d,i) => xScale.bandwidth()/y_names.length * i)
-                //.attr("y",0)
+                //.attr("y",0) 
                 //.attr("y", d => {return yScale(d.value)})
-                .attr("fill", d => {return yCol(d.variable)})
+                //.attr("fill", d => {return yCol(d.variable)})
                 .attr("height", (d,i) => {return (innerHeight - yScale(d.value))})
                 .attr("width", xScale.bandwidth()/y_names.length)
                 .attr("y", d => {return yScale(d.value)}) 
@@ -200,15 +202,14 @@ export const d3barchart = (svg,
             
     const xgroupexit = xgroupStart
         .exit()
-        .transition()
-        .duration(250)
-        .attr("opacity", 0.5)
-        .transition()
-        //.attr("ga", d => {console.log("removing element"); return 0})
-        .duration(1000)
-        .attr("y",innerHeight)
-        .attr("height", 0)
-        .remove()
+            .transition()
+            .duration(animate.out ? 250 : 0) 
+            .attr("opacity", 0.5)
+            .transition()
+            .duration(animate.out ? 1000 : 0)
+            .attr("y",innerHeight)
+            .attr("height", 0)
+            .remove()
   
     // Create Legend
     if(showLegend){
@@ -220,7 +221,7 @@ export const d3barchart = (svg,
             labelPad: legendDim.labelPad,
             legendHeight: legendDim.legendHeight
         }
-
+        console.log(y_names)
         standardLegend(graphMerge, graph_id, y_names, yCol, legendDimAdj)
 
     }

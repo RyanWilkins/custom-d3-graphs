@@ -89,7 +89,10 @@ setTimeout (() => {
 const testdata =  d3.csv("../testdata/catdata.csv").then((data) => {
     d3barchart(bcsvg, data, "mybc", {height : +bcsvg.attr("height"), width : +bcsvg.attr("width")},
         {top: 40, bottom: 40, left: 50, right: 10},
-        true);
+        true,
+        {boxDim:15, labelPad: 5, xStart:0.85, yStart: 0, legendHeight: 100},
+        true,
+        {in:true, out:false});
     /*d3.selectAll(".value__series")
         .attr("fill","orange").style("fill-opacity", 1)
         .exit()
@@ -98,12 +101,14 @@ const testdata =  d3.csv("../testdata/catdata.csv").then((data) => {
             .remove();*/
 
     //console.log(data)
+    var datathree = Object.assign(data)
     var datatwo = data.map(x => {var y = Object.assign({},x);
                                 y.key3 = y.value*2;
                                 return y;
                             })
     datatwo.columns = [...data.columns]
     datatwo.columns.push("key3")
+    
 
     //console.log(datatwo);
     //console.log(data);
@@ -123,8 +128,22 @@ const testdata =  d3.csv("../testdata/catdata.csv").then((data) => {
         //d3.select("#mybc").html(null)
         d3barchart(bcsvg, data, "mybc", {height : +bcsvg.attr("height"), width : +bcsvg.attr("width")},
         {top: 40, bottom: 40, left: 50, right: 10},
-        true);
+        true,
+        {boxDim:15, labelPad: 5, xStart:0.85, yStart: 0, legendHeight: 100},
+        true,
+        {in:true, out:true}) ;
     },3000) 
+    setTimeout (() => { 
+        //data.pop();
+        // console.log(data); 
+        //d3.select("#mybc").html(null)
+        d3barchart(bcsvg, datatwo, "mybc", {height : +bcsvg.attr("height"), width : +bcsvg.attr("width")},
+        {top: 40, bottom: 40, left: 50, right: 10},
+        true,
+        {boxDim:15, labelPad: 5, xStart:0.85, yStart: 0, legendHeight: 100},
+        true,
+        {in:true, out:true}) ;
+    },5000) 
 
  
 })

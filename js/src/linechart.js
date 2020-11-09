@@ -47,10 +47,13 @@ function hover(svg, path, data, xScale, yScale, mLeft, mTop) {
       event.preventDefault();
       const pointer = d3.pointer(event, this);
       console.log(pointer)
-      const xm = xScale.invert(pointer[0]);
-      const ym = yScale.invert(pointer[1]);
+      const xm = xScale.invert(pointer[0]-mLeft);
+      const ym = yScale.invert(pointer[1]-mTop);
+      console.log(xm,ym)
       const i = d3.bisectCenter(data.x_vals, xm);
+      console.log(i)
       const s = d3.least(data.series, d => Math.abs(d.values[i] - (ym)));
+      //console.log(mLeft,mTop)
       path.attr("opacity", d => d === s ? 1 : 0.5).filter(d => d === s).raise();
       dot.attr("transform", `translate(${xScale(data.x_vals[i])},${yScale(s.values[i])})`);
       //dot.select("text").text(s.name);
@@ -143,6 +146,10 @@ export const d3linechart = (svg,
     // Axes
 
     // x axis
+    const xaxfunc = d3.axisBottom(xScale)
+        //delete this line later
+        .tickFormat(d3.format(".0f"))
+
     const xaxis = graphMerge.selectAll('.graph_xaxis')
         .data([null])
 
@@ -151,11 +158,13 @@ export const d3linechart = (svg,
         .attr("id", graph_id + "_xaxisgroup")
         .attr("class", "graph_xaxis")
         .attr("transform", `translate(0, ${innerHeight})`)
-        .call(d3.axisBottom(xScale))
+        .call(xaxfunc)
         .merge(xaxis)
-        .call(d3.axisBottom(xScale));
+        .call(xaxfunc);
     
     xaxis.exit().remove();
+
+    
 
     // y axis
     const yaxis = graphMerge.selectAll(".graph_yaxis")

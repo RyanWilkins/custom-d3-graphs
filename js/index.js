@@ -7,6 +7,7 @@
 import {p_bg, p_cat, p_seq} from './src/palettes.js';
 import {linearGradient} from './src/palettes.js';
 import {d3barchart} from './src/barchart.js';
+import {d3linechart} from './src/linechart.js';
 
 // Categorical colors (max 6)
 const colorCat = d3.scaleOrdinal()
@@ -85,7 +86,7 @@ setTimeout (() => {
     render(svg,fruits);
 },3000) 
 
-
+// bar chart test code
 const testdata =  d3.csv("../testdata/catdata.csv").then((data) => {
     d3barchart(bcsvg, data, "mybc", {height : +bcsvg.attr("height"), width : +bcsvg.attr("width")},
         {top: 40, bottom: 40, left: 50, right: 10},
@@ -148,7 +149,21 @@ const testdata =  d3.csv("../testdata/catdata.csv").then((data) => {
  
 })
 
+// line chart test code
+const linetestdata =  d3.csv("../testdata/catdata.csv").then((data) => {
+    //console.log(data)
+    d3linechart(lnsvg, data, "mylc", {height : +lnsvg.attr("height"), width : +lnsvg.attr("width")},
+        {top: 40, bottom: 40, left: 50, right: 10},
+        true,
+        {boxDim:15, labelPad: 5, xStart:0.85, yStart: 0, legendHeight: 100},
+        true,
+        {in:true, out:false});
+
+    d3.select("#mylc_title").text("Does this change the title?")
+
+})
+
 //const datasource = "../testdata/catdata.csv";
 
 const bcsvg = d3.select('#bar-chart');
-
+const lnsvg = d3.select('#line-chart')

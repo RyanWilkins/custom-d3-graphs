@@ -9,9 +9,9 @@
 // -----Data is going to come in via d3 svg
 
 /* Ideas to Implement:
- - Highlight bars on mousover
+ - Highlight bars on mousover - DONE
  - Filter on legend click
- - Animate coming in
+ - Animate coming in - DONE
 
 */
 
@@ -26,18 +26,18 @@ This function takes a in a d3 formatted object where:
 Goal is to output:
     output = { {x_name:x_value, y_1:y_1_value}, {x_name:x_value, y_2:y_2_value} ...)
 This allows for the d3 Data function to identify each entry individually */
-const deconstructXGroup = (data,
+export const deconstructXGroup = (data,
                             x_name, x_val) =>{
                                 var output = [];
-                                var decon = d3.entries(data);
+                                var decon = Object.entries(data);
                                 //console.log(decon)
                                 decon.shift();        
                                 for (var i = 0; i <decon.length ; i++){
                                     //console.log(pair)
                                     var temp = {}
                                     temp[x_name] = x_val
-                                    temp["variable"] = decon[i]["key"]
-                                    temp["value"] = decon[i]["value"]
+                                    temp["variable"] = decon[i][0]
+                                    temp["value"] = decon[i][1]
                                     output.push(temp)
                                 };
                                 //console.log(output)
@@ -63,13 +63,9 @@ export const d3barchart = (svg,
     const innerHeight = height - margin.top - margin.bottom;
     const innerWidth = width - margin.left - margin.right;
 
-    //console.log("full width is: " + width)
-    //console.log("graph width is: " + innerWidth)
-
     // Define Scales
     var xScale = d3.scaleBand().range([0,innerWidth]).padding(0.2);
     var yScale = d3.scaleLinear().range([innerHeight,0]);
-
 
     // Start building the graph
     var graph = svg.selectAll(".standardBarChart")
@@ -88,7 +84,7 @@ export const d3barchart = (svg,
     graphEnter.append('text')
             .attr('class', "graphTitle")
             .attr('id', graph_id + "_title")
-            .attr("transform", `translate(0, ${0})`)
+            .attr("transform", `translate(0, ${-margin.top/2})`)
             .text("This is a Test Title")
 
     // Parsing data
@@ -221,7 +217,7 @@ export const d3barchart = (svg,
             labelPad: legendDim.labelPad,
             legendHeight: legendDim.legendHeight
         }
-        console.log(y_names)
+        //console.log(y_names)
         standardLegend(graphMerge, graph_id, y_names, yCol, legendDimAdj)
 
     }
@@ -230,7 +226,7 @@ export const d3barchart = (svg,
 
     // Highlighting on Mouseover
     highlighter
-        ? seriesHighlights(graphEnter,".graphBar")
+        ? seriesHighlights(graphMerge,".graphBar")
         : null
 
 }

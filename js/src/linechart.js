@@ -43,25 +43,25 @@ function hover(svg, path, data, xScale, yScale, mLeft, mTop) {
         .attr("y", -8);
   
     function moved(event) {
-     console.log(event)
+     //console.log(event)
       event.preventDefault();
       const pointer = d3.pointer(event, this);
-      console.log(pointer)
+      //console.log(pointer)
       const xm = xScale.invert(pointer[0]-mLeft);
       const ym = yScale.invert(pointer[1]-mTop);
-      console.log(xm,ym)
+      //console.log(xm,ym)
       const i = d3.bisectCenter(data.x_vals, xm);
-      console.log(i)
+      //console.log(i)
       const s = d3.least(data.series, d => Math.abs(d.values[i] - (ym)));
       //console.log(mLeft,mTop)
       path.attr("opacity", d => d === s ? 1 : 0.5).filter(d => d === s).raise();
       dot.attr("transform", `translate(${xScale(data.x_vals[i])},${yScale(s.values[i])})`);
-      //dot.select("text").text(s.name);
+      dot.select("text").text(s.values[i]);
     }
   
     function entered(event) {
-        console.log(event)
-        console.log("Entered")
+        //console.log(event)
+        //console.log("Entered")
         path.style("mix-blend-mode", null).attr("opacity", .5);
         dot.attr("display", null);
     }

@@ -34,7 +34,8 @@ function hover(svg, path, data, xScale, yScale, mLeft, mTop) {
         .attr("display", "none");*/
   
     dot.append("circle")
-        .attr("r", 2.5);
+        .attr("r", 2.5)
+        .attr("z-index", 9999);
   
     dot.append("text")
         .attr("font-family", "sans-serif")
@@ -105,17 +106,28 @@ export const d3linechart = (svg,
                         .attr('class', "standardGraph standardLineChart")
                         .attr("id", graph_id)
                         .attr("transform", `translate(${margin.left}, ${margin.top})`)
-    graphEnter.append("g")
-            .attr("id","highlightDot")
-                    
+    // Background square
+    graphEnter.append('rect')
+        .attr("id", graph_id + "_bgSquare")
+        .attr("x", "0")
+        .attr("y", "0")
+        .attr("height",dims.height)
+        .attr("width", dims.width)
+        .attr("fill", p_bg)
+        .attr("transform", `translate(${-margin.left}, ${-margin.top})`)
+        .attr("rx", "5")
+    
+
+    // Shift everything to the correct position
     var graphMerge = graphEnter.merge(graph)
                         .attr("transform", `translate(${margin.left}, ${margin.top})`)
+
 
     // Title Section
     graphEnter.append('text')
             .attr('class', "graphTitle")
             .attr('id', graph_id + "_title")
-            .attr("transform", `translate(0, ${-margin.top/2})`)
+            .attr("transform", `translate(0, ${-margin.top/4})`)
             .text("This is a Test Title")
 
     // Parsing data
@@ -204,15 +216,45 @@ export const d3linechart = (svg,
     var lineGroup = graphMerge
         .append("g")
             .attr("fill", "none")
-            .attr("stroke-width", 1.5)
+            .attr("stroke-width", 3)
         .selectAll('path')
             .data(chartData.series)
             .enter()
             .append("path")
                 .attr("class", (d,i) => {return ("graphLine " + y_names[i] +"__series")})
                 .attr("d", d => genLine(d.values))
-                .attr("stroke", (d,i) => {return yCol(y_names[i])})  
+                .attr("stroke", (d,i) => {return yCol(y_names[i])})
+                
                 //.on("mousemove", (d,e) => {console.log(d)})
+    
+    // Animate Lines In
+    // https://medium.com/@louisemoxy/create-a-d3-line-chart-animation-336f1cb7dd61
+    const transitionPath = d3
+        .transition()
+        .duration(animate.in ? 2500 : 0);
+
+    lineGroup.each(function(){
+        console.log(this.getTotalLength())
+        var pathlength = this.getTotalLength()
+        
+    d3.select(this)
+            .attr("stroke-dashoffset", pathlength)
+            .attr("stroke-dasharray", pathlength)
+            .transition(transitionPath)
+            .attr("stroke-dashoffset", 0)
+    })
+
+    lineGroup.selectAll("path").select(function(){
+        console.log(this.node().getTotalLength())
+        console.log("Ran")
+    })
+    //const pathLength = lineGroup.forEach().node().getTotalLength()
+    //console.log(pathLength)
+    /*graphMerge.selectAll("path")
+        .attr("test", d => {return console.log(d)})*/
+
+        graphEnter.append("g")
+                .attr("id","highlightDot")
 
         // Create Legend
         if(showLegend){

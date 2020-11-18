@@ -80,11 +80,22 @@ export const d3barchart = (svg,
     var graphMerge = graphEnter.merge(graph)
                         .attr("transform", `translate(${margin.left}, ${margin.top})`)
 
+    // Background square
+    graphEnter.append('rect')
+            .attr("id", graph_id + "_bgSquare")
+            .attr("x", "0")
+            .attr("y", "0")
+            .attr("height",dims.height)
+            .attr("width", dims.width)
+            .attr("fill", p_bg)
+            .attr("transform", `translate(${-margin.left}, ${-margin.top})`)
+            .attr("rx", "5")
+
     // Title Section
     graphEnter.append('text')
             .attr('class', "graphTitle")
             .attr('id', graph_id + "_title")
-            .attr("transform", `translate(0, ${-margin.top/2})`)
+            .attr("transform", `translate(0, ${-margin.top/4})`)
             .text("This is a Test Title")
 
     // Parsing data

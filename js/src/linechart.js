@@ -77,6 +77,7 @@ function hover(svg, path, data, xScale, yScale, mLeft, mTop) {
 export const d3linechart = (svg,
     data, 
     graph_id, 
+    axis = {x: null, y: null},
     dims = {height : 100, width : 100}, 
     margin = {top: 10, bottom: 10, left: 10, right: 10},
     showLegend = true,
@@ -127,7 +128,7 @@ export const d3linechart = (svg,
     graphEnter.append('text')
             .attr('class', "graphTitle")
             .attr('id', graph_id + "_title")
-            .attr("transform", `translate(0, ${-margin.top/4})`)
+            .attr("transform", `translate(${innerWidth*.025}, ${-margin.top/4})`)
             .text("This is a Test Title")
 
     // Parsing data
@@ -174,9 +175,19 @@ export const d3linechart = (svg,
         .merge(xaxis)
         .call(xaxfunc);
     
-    xaxis.exit().remove();
-
+    // x label
+    const xlabel  = graphMerge.selectAll('.xaxislabel')
+        .data([null])
     
+    xlabel.enter()
+        .append("text")  
+            .attr("class", "axisLabel xaxislabel")
+            .attr("transform", `translate(${innerWidth/2 - margin.left},${innerHeight + margin.bottom*.8})`)
+            .text(axis.x)
+        .merge(xlabel)
+            .text(axis.x)
+
+    xaxis.exit().remove();
 
     // y axis
     const yaxis = graphMerge.selectAll(".graph_yaxis")
@@ -189,6 +200,17 @@ export const d3linechart = (svg,
         .call(d3.axisLeft(yScale))
         .merge(yaxis)
             .call(d3.axisLeft(yScale));
+
+    const ylabel  = graphMerge.selectAll('.yaxislabel')
+        .data([null])
+    
+    yaxis.enter()
+        .append("text")
+        .merge(ylabel)
+            .text(axis.y)
+            .attr("class", "axisLabel yaxislabel")
+            .attr("transform", `translate(${-margin.left*.7},${innerHeight/2})rotate(270)`)
+            .attr("text-anchor","middle")
     
     yaxis.exit().remove()
 

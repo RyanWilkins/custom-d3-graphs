@@ -47,7 +47,8 @@ export const deconstructXGroup = (data,
 
 export const d3barchart = (svg,
                             data, 
-                            graph_id, 
+                            graph_id,
+                            axis = {x: null, y: null}, 
                             dims = {height : 100, width : 100}, 
                             margin = {top: 10, bottom: 10, left: 10, right: 10},
                             showLegend = true,
@@ -95,7 +96,7 @@ export const d3barchart = (svg,
     graphEnter.append('text')
             .attr('class', "graphTitle")
             .attr('id', graph_id + "_title")
-            .attr("transform", `translate(0, ${-margin.top/4})`)
+            .attr("transform", `translate(${innerWidth*.025}, ${-margin.top/4})`)
             .text("This is a Test Title")
 
     // Parsing data
@@ -137,6 +138,20 @@ export const d3barchart = (svg,
         .merge(xaxis)
         .call(d3.axisBottom(xScale));
     
+    
+
+    // x label
+    const xlabel  = graphMerge.selectAll('.xaxislabel')
+        .data([null])
+    
+    xlabel.enter()
+        .append("text")  
+            .attr("class", "axisLabel xaxislabel")
+            .attr("transform", `translate(${innerWidth/2 - margin.left},${innerHeight + margin.bottom*.8})`)
+            .text(axis.x)
+        .merge(xlabel)
+            .text(axis.x)
+
     xaxis.exit().remove();
 
     // y axis
@@ -153,10 +168,18 @@ export const d3barchart = (svg,
     
     yaxis.exit().remove()
 
-    /*graphMerge.append("g")
-        .attr("id", graph_id + "_yaxisgroup")
-        .call(d3.axisLeft(yScale));*/
-    
+    // y label
+    const ylabel  = graphMerge.selectAll('.yaxislabel')
+        .data([null])
+
+    yaxis.enter()
+        .append("text")
+        .merge(ylabel)
+            .text(axis.y)
+            .attr("class", "axisLabel yaxislabel")
+            .attr("transform", `translate(${-margin.left*.7},${innerHeight/2})rotate(270)`)
+            .attr("text-anchor","middle")
+
     // Append data to bar chart
     const barStart = graphMerge.selectAll('.graphXGroup')
         .data(data, (e) => {

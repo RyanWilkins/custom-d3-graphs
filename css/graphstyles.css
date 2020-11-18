@@ -1,12 +1,5 @@
-
-
-
-.line-path {
-  fill: maroon;
-}
-
 text {
-  font-family: sans-serif;
+  font-family: Roboto, sans-serif;
 }
 
 .tick text {
@@ -18,27 +11,20 @@ text {
   stroke: #C0C0BB;
 }
 
-.axis-label {
-  font-size: 5em;
+.axisLabel {
+  font-size: 1em;
   fill: #8E8883;
-}
-
-.title {
-  font-size: 3.7em;
-  fill: #635F5D;
-  text-anchor: middle;
 }
 
 /* Standard graph title */
 .graphTitle{
-  font-family: Roboto 'sans-serif';
   font-size: 1.5em;
 }
 
 /* Bars on Bar Graph */
 .graphBar{
   stroke: black;
-  stroke-width: 1px;
+  stroke-width: 2px;
 }
 
 
@@ -51,5 +37,5 @@ text {
 
 .legendSquare{
   stroke:black;
-  stroke-width: 2;
+  stroke-width: 2px;
 }

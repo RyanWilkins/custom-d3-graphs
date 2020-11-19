@@ -12,6 +12,7 @@
  - Highlight bars on mousover - DONE
  - Filter on legend click
  - Animate coming in - DONE
+ - Optional Gridlines
 
 */
 
@@ -177,7 +178,7 @@ export const d3barchart = (svg,
         .merge(ylabel)
             .text(axis.y)
             .attr("class", "axisLabel yaxislabel")
-            .attr("transform", `translate(${-margin.left*.7},${innerHeight/2})rotate(270)`)
+            .attr("transform", `translate(${-margin.left*.6},${innerHeight/2})rotate(270)`)
             .attr("text-anchor","middle")
 
     // Append data to bar chart

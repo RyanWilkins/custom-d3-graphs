@@ -209,7 +209,7 @@ export const d3linechart = (svg,
         .merge(ylabel)
             .text(axis.y)
             .attr("class", "axisLabel yaxislabel")
-            .attr("transform", `translate(${-margin.left*.7},${innerHeight/2})rotate(270)`)
+            .attr("transform", `translate(${-margin.left*.6},${innerHeight/2})rotate(270)`)
             .attr("text-anchor","middle")
     
     yaxis.exit().remove()

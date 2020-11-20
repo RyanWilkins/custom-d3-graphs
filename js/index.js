@@ -92,9 +92,9 @@ const testdata =  d3.csv("../testdata/catdata.csv").then((data) => {
         {x:"Year", y:"Value"},
          {height : +bcsvg.attr("height"), width : +bcsvg.attr("width")},
     
-        {top: 40, bottom: 50, left: 60, right: 10},
+        {top: 10, bottom: 13, left: 10, right: 1},
         true,
-        {boxDim:15, labelPad: 5, xStart:0.85, yStart: 0, legendHeight: 100},
+        {boxDim:1.5, labelPad: 1, xStart:85, yStart: 0, legendHeight: 15},
         true,
         {in:true, out:false});
     /*d3.selectAll(".value__series")
@@ -133,11 +133,12 @@ const testdata =  d3.csv("../testdata/catdata.csv").then((data) => {
         d3barchart(bcsvg, data, "mybc",
         {x:"Year", y:"Value"},
         {height : +bcsvg.attr("height"), width : +bcsvg.attr("width")},
-        {top: 40, bottom: 50, left: 60, right: 10},
+    
+        {top: 10, bottom: 13, left: 10, right: 1},
         true,
-        {boxDim:15, labelPad: 5, xStart:0.85, yStart: 0, legendHeight: 100},
+        {boxDim:1.5, labelPad: 1, xStart:85, yStart: 0, legendHeight: 15},
         true,
-        {in:true, out:true}) ;
+        {in:true, out:false});
     },3000) 
     setTimeout (() => { 
         //data.pop();
@@ -146,11 +147,12 @@ const testdata =  d3.csv("../testdata/catdata.csv").then((data) => {
         d3barchart(bcsvg, datatwo, "mybc", 
         {x:"New Year", y:"Value"},
         {height : +bcsvg.attr("height"), width : +bcsvg.attr("width")},
-        {top: 40, bottom: 50, left: 60, right: 10},
+    
+        {top: 10, bottom: 13, left: 10, right: 1},
         true,
-        {boxDim:15, labelPad: 5, xStart:0.85, yStart: 0, legendHeight: 100},
+        {boxDim:1.5, labelPad: 1, xStart:85, yStart: 0, legendHeight: 15},
         true,
-        {in:true, out:true}) ;
+        {in:true, out:false});
     },5000) 
 
  
@@ -163,11 +165,11 @@ const linetestdata =  d3.csv("../testdata/catdata.csv").then((data) => {
     {x: "My X Values", y: "My Y Value"},
     {height : +lnsvg.attr("height"), width : +lnsvg.attr("width")},
         
-        {top: 40, bottom: 50, left: 70, right: 40},
-        true,
-        {boxDim:15, labelPad: 15, xStart:0.85, yStart: 0, legendHeight: 100},
-        true,
-        {in:true, out:false});
+    {top: 10, bottom: 10, left: 10, right: 1},
+    true,
+    {boxDim:1.5, labelPad: 1, xStart:85, yStart: 0, legendHeight: 15},
+    true,
+    {in:true, out:false});
 
     d3.select("#mylc_title").text("Does this change the title?")
 

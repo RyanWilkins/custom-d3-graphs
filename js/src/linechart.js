@@ -79,19 +79,30 @@ export const d3linechart = (svg,
     graph_id, 
     axis = {x: null, y: null},
     dims = {height : 100, width : 100}, 
-    margin = {top: 10, bottom: 10, left: 10, right: 10},
+    perc_margin = {top: 10, bottom: 10, left: 10, right: 10},
     showLegend = true,
-    legendDim = {boxDim:15, labelPad: 5, xStart:0.85, yStart: 0, legendHeight: 100},
+    perc_legendDim = {boxDim:15, labelPad: 5, xStart:0.85, yStart: 0, legendHeight: 100},
     highlighter = true,
     animate = {in:true, out:true}
     ) => {
 
     const height = dims.height;
     const width = showLegend 
-                    ? dims.width * legendDim.xStart
+                    ? dims.width * perc_legendDim.xStart/100
                     : dims.width ;
+    const margin = {top: perc_margin.top/100 * height,
+                    bottom: perc_margin.bottom/100 * height,
+                    left: perc_margin.left/100 * width,
+                    right: perc_margin.right/100 * width}
     const innerHeight = height - margin.top - margin.bottom;
     const innerWidth = width - margin.left - margin.right;
+    const legendDim = {
+        boxDim: perc_legendDim.boxDim/100*width,
+        labelPad: perc_legendDim.labelPad/100*width,
+        xStart: perc_legendDim.xStart/100,
+        yStart: perc_legendDim.yStart/100,
+        legendHeight: perc_legendDim.legendHeight/100*height
+    }
 
     // Define Scales
     var xScale = d3.scaleLinear().range([0,innerWidth]);
@@ -282,7 +293,7 @@ export const d3linechart = (svg,
         if(showLegend){
 
             const legendDimAdj ={
-                xOffset: width * legendDim.xStart + margin.left,
+                xOffset: innerWidth + margin.right ,
                 yOffset: height * legendDim.yStart + margin.top,
                 boxDim: legendDim.boxDim,
                 labelPad: legendDim.labelPad,

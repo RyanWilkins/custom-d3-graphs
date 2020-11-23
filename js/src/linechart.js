@@ -38,8 +38,6 @@ function hover(svg, path, data, xScale, yScale, mLeft, mTop) {
         .attr("z-index", 9999);
   
     dot.append("text")
-        .attr("font-family", "sans-serif")
-        .attr("font-size", 10)
         .attr("text-anchor", "middle")
         .attr("y", -8);
   
@@ -172,7 +170,7 @@ export const d3linechart = (svg,
     // x axis
     const xaxfunc = d3.axisBottom(xScale)
         //delete this line later
-        .tickFormat(d3.format(".0f"))
+        //.tickFormat(d3.format(".0f"))
 
     const xaxis = graphMerge.selectAll('.graph_xaxis')
         .data([null])
@@ -183,6 +181,8 @@ export const d3linechart = (svg,
         .attr("class", "graph_xaxis")
         .attr("transform", `translate(0, ${innerHeight})`)
         .call(xaxfunc)
+        .attr("font-size", null)
+        .attr("font-family", null)
         .merge(xaxis)
         .call(xaxfunc);
     
@@ -209,6 +209,8 @@ export const d3linechart = (svg,
         .attr("class", "graph_yaxis")
         .attr("id", graph_id + "_yaxisgroup")
         .call(d3.axisLeft(yScale))
+        .attr("font-size", null)
+        .attr("font-family", null)
         .merge(yaxis)
             .call(d3.axisLeft(yScale));
 
@@ -267,7 +269,7 @@ export const d3linechart = (svg,
         .duration(animate.in ? 2500 : 0);
 
     lineGroup.each(function(){
-        console.log(this.getTotalLength())
+        //console.log(this.getTotalLength())
         var pathlength = this.getTotalLength()
         
     d3.select(this)

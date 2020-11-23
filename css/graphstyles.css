@@ -1,34 +1,37 @@
-text {
-  font-family: Roboto, sans-serif;
+/* CSS Styles for d3-custom standard graphics */
+
+.standardGraph {
+  font-family: 'Monaco';
+  fill:#353839;
+  color: #635F5D
 }
 
 .tick text {
-  font-size: 1.5em;
-  fill: #635F5D;
+  font-size:14px;
 }
 
 .tick line {
-  stroke: #C0C0BB;
 }
 
 .axisLabel {
-  font-size: 1em;
-  fill: #8E8883;
+  font-size:14px;
 }
 
 .graph_xaxis, .graph_yaxis{
-  color:black
+  
 }
+
+
 
 /* Standard graph title */
 .graphTitle{
-  font-size: 2em;
-  fill: #353839
+  fill: #353839;
+  font-size: 16px;
 }
 
 /* Bars on Bar Graph */
 .graphBar{
-  stroke: black;
+  stroke: #353839;
   stroke-width: 2px;
 }
 
@@ -36,12 +39,45 @@ text {
 /* Standard Legend Styling */
 
 .legendLabel{
-  font-size: 18px;
   alignment-baseline: middle;
-  fill: #353839;
+  font-size:14px;
 }
 
 .legendSquare{
-  stroke:black;
+  stroke:#353839;
   stroke-width: 2px;
+}
+
+/* Font sizes based on device size */
+/* Small devices (landscape phones, 576px and up) */
+@media (min-width: 576px) {  
+}
+ 
+/* Medium devices (tablets, 768px and up) The navbar toggle appears at this breakpoint */
+@media (min-width: 768px) {  
+  .graphTitle{
+    font-size: 20px;
+  }
+
+  .tick text {
+    font-size:14px;
+  }
+
+  .legendLabel{
+    font-size:16px;
+  }
+
+  .axisLabel{
+    font-size:16px
+  }
+}
+ 
+/* Large devices (desktops, 992px and up) */
+@media (min-width: 992px) { 
+ 
+}
+ 
+/* Extra large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) {  
+    
 }

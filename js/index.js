@@ -87,14 +87,19 @@ setTimeout (() => {
 },3000) 
 
 // bar chart test code
+$(document).ready(() => {
 const testdata =  d3.csv("../testdata/catdata.csv").then((data) => {
+
+    var graphic_width = window.innerWidth*0.9
+    bcsvg.attr("width", graphic_width).attr("height", graphic_width < 768 ? graphic_width : graphic_width*0.5)
+
     d3barchart(bcsvg, data, "mybc",
         {x:"Year", y:"Value"},
          {height : +bcsvg.attr("height"), width : +bcsvg.attr("width")},
     
-        {top: 10, bottom: 13, left: 10, right: 1},
+        {top: 10, bottom: 15, left: 15, right: 1},
         true,
-        {boxDim:1.5, labelPad: 1, xStart:85, yStart: 0, legendHeight: 15},
+        {boxDim:1.5, labelPad: 1, xStart:85, yStart: 0, legendHeight: 20},
         true,
         {in:true, out:false});
     /*d3.selectAll(".value__series")
@@ -134,9 +139,9 @@ const testdata =  d3.csv("../testdata/catdata.csv").then((data) => {
         {x:"Year", y:"Value"},
         {height : +bcsvg.attr("height"), width : +bcsvg.attr("width")},
     
-        {top: 10, bottom: 13, left: 10, right: 1},
+        {top: 10, bottom: 15, left: 15, right: 1},
         true,
-        {boxDim:1.5, labelPad: 1, xStart:85, yStart: 0, legendHeight: 15},
+        {boxDim:1.5, labelPad: 1, xStart:85, yStart: 0, legendHeight: 20},
         true,
         {in:true, out:false});
     },3000) 
@@ -148,9 +153,9 @@ const testdata =  d3.csv("../testdata/catdata.csv").then((data) => {
         {x:"New Year", y:"Value"},
         {height : +bcsvg.attr("height"), width : +bcsvg.attr("width")},
     
-        {top: 10, bottom: 13, left: 10, right: 1},
+        {top: 10, bottom: 15, left: 15, right: 1},
         true,
-        {boxDim:1.5, labelPad: 1, xStart:85, yStart: 0, legendHeight: 15},
+        {boxDim:1.5, labelPad: 1, xStart:85, yStart: 0, legendHeight: 20},
         true,
         {in:true, out:false});
     },5000) 
@@ -161,21 +166,28 @@ const testdata =  d3.csv("../testdata/catdata.csv").then((data) => {
 // line chart test code
 const linetestdata =  d3.csv("../testdata/catdata.csv").then((data) => {
     //console.log(data)
+    var graphic_width = window.innerWidth*0.9
+    lnsvg.attr("width", graphic_width).attr("height", graphic_width < 768 ? graphic_width : graphic_width*0.5)
+
     d3linechart(lnsvg, data, "mylc", 
     {x: "My X Values", y: "My Y Value"},
     {height : +lnsvg.attr("height"), width : +lnsvg.attr("width")},
         
-    {top: 10, bottom: 10, left: 10, right: 1},
+    {top: 10, bottom: 15, left: 15, right: 1},
     true,
     {boxDim:1.5, labelPad: 1, xStart:85, yStart: 0, legendHeight: 15},
     true,
     {in:true, out:false});
 
     d3.select("#mylc_title").text("Does this change the title?")
+    d3.select("#mylc_xaxisgroup").tickFormat(d3.format("0f"));
+   
 
 })
 
 //const datasource = "../testdata/catdata.csv";
 
 const bcsvg = d3.select('#bar-chart');
-const lnsvg = d3.select('#line-chart')
+const lnsvg = d3.select('#line-chart');
+
+})

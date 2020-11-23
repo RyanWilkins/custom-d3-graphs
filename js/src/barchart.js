@@ -147,6 +147,8 @@ export const d3barchart = (svg,
         .attr("class", "graph_xaxis")
         .attr("transform", `translate(0, ${innerHeight})`)
         .call(d3.axisBottom(xScale))
+        .attr("font-size", null)
+        .attr("font-family", null)
         .merge(xaxis)
         .call(d3.axisBottom(xScale));
     
@@ -175,6 +177,8 @@ export const d3barchart = (svg,
         .attr("class", "graph_yaxis")
         .attr("id", graph_id + "_yaxisgroup")
         .call(d3.axisLeft(yScale))
+        .attr("font-size", null)
+        .attr("font-family", null)
         .merge(yaxis)
             .call(d3.axisLeft(yScale));
     

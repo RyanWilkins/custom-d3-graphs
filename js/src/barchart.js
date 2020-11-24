@@ -161,7 +161,7 @@ export const d3barchart = (svg,
     xlabel.enter()
         .append("text")  
             .attr("class", "axisLabel xaxislabel")
-            .attr("transform", `translate(${innerWidth/2 - margin.left},${innerHeight + margin.bottom*.8})`)
+            .attr("transform", `translate(${innerWidth/2},${innerHeight + margin.bottom*.8})`)
             .text(axis.x)
         .merge(xlabel)
             .text(axis.x)

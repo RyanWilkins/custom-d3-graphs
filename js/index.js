@@ -93,23 +93,13 @@ const testdata =  d3.csv("../testdata/catdata.csv").then((data) => {
     var graphic_width = window.innerWidth*0.9
     bcsvg.attr("width", graphic_width).attr("height", graphic_width < 768 ? graphic_width : graphic_width*0.5)
 
-    d3barchart(bcsvg, data, "mybc",
-        {x:"Year", y:"Value"},
-         {height : +bcsvg.attr("height"), width : +bcsvg.attr("width")},
-    
-        {top: 10, bottom: 15, left: 15, right: 1},
-        true,
-        {boxDim:1.5, labelPad: 1, xStart:85, yStart: 0, legendHeight: 20},
-        true,
-        {in:true, out:false});
-    /*d3.selectAll(".value__series")
-        .attr("fill","orange").style("fill-opacity", 1)
-        .exit()
-            .transition().duration(500)
-            .attr("height", 0)
-            .remove();*/
+    var bc_parms =         {
+                            axis : {x:"Year", y:"Value"},
+                            dims : {height : +bcsvg.attr("height"), width : +bcsvg.attr("width")},
+                            animate : {in:true, out:true}
+                            }
+    d3barchart(bcsvg, data, "mybc", bc_parms)
 
-    //console.log(data)
     var datathree = Object.assign(data)
     var datatwo = data.map(x => {var y = Object.assign({},x);
                                 y.key3 = y.value*2;
@@ -117,47 +107,16 @@ const testdata =  d3.csv("../testdata/catdata.csv").then((data) => {
                             })
     datatwo.columns = [...data.columns]
     datatwo.columns.push("key3")
-    
 
-    //console.log(datatwo);
-    //console.log(data);
     for (var i = 0; i < data.length;i++){
         delete data[i].otherval
     }
 
-   /* setTimeout(() =>{
-        d3.select("#mybc").html(null)
-        d3barchart(bcsvg, datatwo, "mybc", {height : +bcsvg.attr("height"), width : +bcsvg.attr("width")},
-        {top: 40, bottom: 40, left: 50, right: 10},
-        true);
-    },3000)*/
     setTimeout (() => {
-        //data.pop();
-        // console.log(data); 
-        //d3.select("#mybc").html(null)
-        d3barchart(bcsvg, data, "mybc",
-        {x:"Year", y:"Value"},
-        {height : +bcsvg.attr("height"), width : +bcsvg.attr("width")},
-    
-        {top: 10, bottom: 15, left: 15, right: 1},
-        true,
-        {boxDim:1.5, labelPad: 1, xStart:85, yStart: 0, legendHeight: 20},
-        true,
-        {in:true, out:false});
+        d3barchart(bcsvg, data, "mybc", bc_parms);
     },3000) 
     setTimeout (() => { 
-        //data.pop();
-        // console.log(data); 
-        //d3.select("#mybc").html(null)
-        d3barchart(bcsvg, datatwo, "mybc", 
-        {x:"New Year", y:"Value"},
-        {height : +bcsvg.attr("height"), width : +bcsvg.attr("width")},
-    
-        {top: 10, bottom: 15, left: 15, right: 1},
-        true,
-        {boxDim:1.5, labelPad: 1, xStart:85, yStart: 0, legendHeight: 20},
-        true,
-        {in:true, out:false});
+        d3barchart(bcsvg, datatwo, "mybc", bc_parms);
     },5000) 
 
  
@@ -169,18 +128,16 @@ const linetestdata =  d3.csv("../testdata/catdata.csv").then((data) => {
     var graphic_width = window.innerWidth*0.9
     lnsvg.attr("width", graphic_width).attr("height", graphic_width < 768 ? graphic_width : graphic_width*0.5)
 
-    d3linechart(lnsvg, data, "mylc", 
-    {x: "My X Values", y: "My Y Value"},
-    {height : +lnsvg.attr("height"), width : +lnsvg.attr("width")},
-        
-    {top: 10, bottom: 15, left: 15, right: 1},
-    true,
-    {boxDim:1.5, labelPad: 1, xStart:85, yStart: 0, legendHeight: 15},
-    true,
-    {in:true, out:false});
+    var lc_parms = {
+        axis: {x: "My X Values", y: "My Y Value"},
+        dims: {height : +lnsvg.attr("height"), width : +lnsvg.attr("width")},
+        axis_format: {x:{tickFormat: ".0f", ticks:5}, y: {tickFormat: ".0f", ticks:10}}
+    }
+
+    d3linechart(lnsvg, data, "mylc", lc_parms);
 
     d3.select("#mylc_title").text("Does this change the title?")
-    d3.select("#mylc_xaxisgroup").tickFormat(d3.format("0f"));
+    //d3.select("#mylc_xaxisgroup").tickFormat(d3.format("0f"));
    
 
 })

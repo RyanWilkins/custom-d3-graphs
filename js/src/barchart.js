@@ -49,13 +49,16 @@ export const deconstructXGroup = (data,
 export const d3barchart = (svg,
                             data, 
                             graph_id,
+                            {
                             axis = {x: null, y: null}, 
+                            axis_format = {x: {ticks: null, tickFormat: null}, y: {ticks: null, tickFormat: null}},
                             dims = {height : 100, width : 100}, 
-                            perc_margin = {top: 10, bottom: 10, left: 10, right: 10},
+                            perc_margin = {top: 10, bottom: 15, left: 15, right: 1},
                             showLegend = true,
-                            perc_legendDim = {boxDim:15, labelPad: 5, xStart:0.85, yStart: 0, legendHeight: 100},
+                            perc_legendDim = {boxDim:1.5, labelPad: 1, xStart:85, yStart: 0, legendHeight: 20},
                             highlighter = true,
                             animate = {in:true, out:true}
+                            } 
                             ) => {
 
     const height = dims.height;
@@ -141,16 +144,20 @@ export const d3barchart = (svg,
     const xaxis = graphMerge.selectAll('.graph_xaxis')
         .data([null])
 
+    var xaxfunc = d3.axisBottom(xScale)
+                .tickFormat(axis_format.x.tickFormat === null ? null: d3.format(axis_format.x.tickFormat))
+                .ticks(axis_format.x.ticks)
+
     xaxis.enter()
         .append("g")
         .attr("id", graph_id + "_xaxisgroup")
         .attr("class", "graph_xaxis")
         .attr("transform", `translate(0, ${innerHeight})`)
-        .call(d3.axisBottom(xScale))
+        .call(xaxfunc)
         .attr("font-size", null)
         .attr("font-family", null)
         .merge(xaxis)
-        .call(d3.axisBottom(xScale));
+        .call(xaxfunc);
     
     
 
@@ -172,15 +179,19 @@ export const d3barchart = (svg,
     const yaxis = graphMerge.selectAll(".graph_yaxis")
         .data([null])
 
+    var yaxfunc = d3.axisLeft(yScale)
+        .tickFormat(axis_format.y.tickFormat === null ? null: d3.format(axis_format.y.tickFormat))
+        .ticks(axis_format.y.ticks)
+
     yaxis.enter()
         .append("g")
         .attr("class", "graph_yaxis")
         .attr("id", graph_id + "_yaxisgroup")
-        .call(d3.axisLeft(yScale))
+        .call(yaxfunc)
         .attr("font-size", null)
         .attr("font-family", null)
         .merge(yaxis)
-            .call(d3.axisLeft(yScale));
+            .call(yaxfunc);
     
     yaxis.exit().remove()
 

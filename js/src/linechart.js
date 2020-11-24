@@ -75,13 +75,16 @@ function hover(svg, path, data, xScale, yScale, mLeft, mTop) {
 export const d3linechart = (svg,
     data, 
     graph_id, 
-    axis = {x: null, y: null},
-    dims = {height : 100, width : 100}, 
-    perc_margin = {top: 10, bottom: 10, left: 10, right: 10},
-    showLegend = true,
-    perc_legendDim = {boxDim:15, labelPad: 5, xStart:0.85, yStart: 0, legendHeight: 100},
-    highlighter = true,
-    animate = {in:true, out:true}
+    {
+        axis = {x: null, y: null},
+        axis_format = {x: {ticks: null, tickFormat: null}, y: {ticks: null, tickFormat: null}},
+        dims = {height : 100, width : 100}, 
+        perc_margin = {top: 10, bottom: 15, left: 15, right: 1},
+        showLegend = true,
+        perc_legendDim = {boxDim:1.5, labelPad: 1, xStart:85, yStart: 0, legendHeight: 15},
+        highlighter = true,
+        animate = {in:true, out:true}
+    }
     ) => {
 
     const height = dims.height;
@@ -168,9 +171,9 @@ export const d3linechart = (svg,
     // Axes
 
     // x axis
-    const xaxfunc = d3.axisBottom(xScale)
-        //delete this line later
-        //.tickFormat(d3.format(".0f"))
+    var xaxfunc = d3.axisBottom(xScale)
+                    .tickFormat(axis_format.x.tickFormat === null ? null: d3.format(axis_format.x.tickFormat))
+                    .ticks(axis_format.x.ticks)
 
     const xaxis = graphMerge.selectAll('.graph_xaxis')
         .data([null])
@@ -204,15 +207,19 @@ export const d3linechart = (svg,
     const yaxis = graphMerge.selectAll(".graph_yaxis")
         .data([null])
 
+    var yaxfunc = d3.axisLeft(yScale)
+        .tickFormat(axis_format.y.tickFormat === null ? null: d3.format(axis_format.y.tickFormat))
+        .ticks(axis_format.y.ticks)
+
     yaxis.enter()
         .append("g")
         .attr("class", "graph_yaxis")
         .attr("id", graph_id + "_yaxisgroup")
-        .call(d3.axisLeft(yScale))
+        .call(yaxfunc)
         .attr("font-size", null)
         .attr("font-family", null)
         .merge(yaxis)
-            .call(d3.axisLeft(yScale));
+            .call(yaxfunc);
 
     const ylabel  = graphMerge.selectAll('.yaxislabel')
         .data([null])

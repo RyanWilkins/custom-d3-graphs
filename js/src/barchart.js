@@ -50,7 +50,7 @@ export const d3barchart = (svg,
                             graph_id,
                             {
                             axis = {x: null, y: null}, 
-                            axis_format = {x: {ticks: null, tickFormat: null}, y: {ticks: null, tickFormat: null}},
+                            axis_format = {x: {ticks: null, tickFormat: null, tickValues: null}, y: {ticks: null, tickFormat: null, tickValues: null}},
                             dims = {height : 100, width : 100}, 
                             perc_margin = {top: 10, bottom: 15, left: 15, right: 1},
                             showLegend = true,
@@ -147,6 +147,7 @@ export const d3barchart = (svg,
     var xaxfunc = d3.axisBottom(xScale)
                 .tickFormat(axis_format.x.tickFormat === null ? null: d3.format(axis_format.x.tickFormat))
                 .ticks(axis_format.x.ticks)
+                .tickValues(axis_format.x.tickValues)
 
     xaxis.enter()
         .append("g")
@@ -183,6 +184,7 @@ export const d3barchart = (svg,
     var yaxfunc = d3.axisLeft(yScale)
         .tickFormat(axis_format.y.tickFormat === null ? null: d3.format(axis_format.y.tickFormat))
         .ticks(axis_format.y.ticks)
+        .tickValues(axis_format.y.tickValues)
 
     yaxis.enter()
         .append("g")

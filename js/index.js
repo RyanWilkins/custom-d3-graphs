@@ -131,7 +131,7 @@ const linetestdata =  d3.csv("../testdata/catdata.csv").then((data) => {
     var lc_parms = {
         axis: {x: "My X Values", y: "My Y Value"},
         dims: {height : +lnsvg.attr("height"), width : +lnsvg.attr("width")},
-        axis_format: {x:{tickFormat: ".0f", ticks:5}, y: {tickFormat: ".0f", ticks:10}}
+        axis_format: {x:{tickFormat: ".0f", ticks: null, tickValues: [2011,2012,2013,2014,2015,2016]}, y: {tickFormat: ".0f", ticks:10}}
     }
 
     d3linechart(lnsvg, data, "mylc", lc_parms);

@@ -29,19 +29,18 @@ Goal is to output:
 This allows for the d3 Data function to identify each entry individually */
 export const deconstructXGroup = (data,
                             x_name, x_val) =>{
+
                                 var output = [];
                                 var decon = Object.entries(data);
-                                //console.log(decon)
-                                decon.shift();        
+                                decon.shift(); 
+                                      
                                 for (var i = 0; i <decon.length ; i++){
-                                    //console.log(pair)
                                     var temp = {}
                                     temp[x_name] = x_val
                                     temp["variable"] = decon[i][0]
                                     temp["value"] = decon[i][1]
                                     output.push(temp)
                                 };
-                                //console.log(output)
                                 return(output);
                             }
 
@@ -170,6 +169,7 @@ export const d3barchart = (svg,
         .append("text")  
             .attr("class", "axisLabel xaxislabel")
             .attr("transform", `translate(${innerWidth/2},${innerHeight + margin.bottom*.8})`)
+            .attr("text-anchor", "middle")
             .text(axis.x)
         .merge(xlabel)
             .text(axis.x)
@@ -211,7 +211,6 @@ export const d3barchart = (svg,
     // Append data to bar chart
     const barStart = graphMerge.selectAll('.graphXGroup')
         .data(data, (e) => {
-            //console.log(x_name + e[x_name]);
             return (x_name + e[x_name]);
         })
         
@@ -225,13 +224,10 @@ export const d3barchart = (svg,
         .append("g")
             .attr("class", "graphXGroup")
             .attr("transform", (d,i) => {return (`translate(${xScale(d[x_name])},0)`)})
-            //.attr("asd", (d,i) => {console.log(d); return 0})
         .merge(barStart) 
-            //.attr("transform", (d,i) => {return (`translate(${xScale(d[x_name])},0)`)})
         .selectAll(".graphBar")
             .data(d => {return deconstructXGroup(d,x_name,d[x_name])}, (e) => {
                 var barid = e[x_name] + e.variable;
-                //console.log(barid)
                 return(barid);
             })
 
@@ -240,9 +236,6 @@ export const d3barchart = (svg,
         .append("rect")
             .attr("class", (d,i) => "graphBar " + d.variable + "__series")
             .attr("x",(d,i) => xScale.bandwidth()/y_names.length * i)
-            //.attr("width", xScale.bandwidth()/y_names.length)
-            //.attr("y", d => {return yScale(d.value)})
-            //.attr("height", (d,i) => {return (innerHeight - yScale(d.value))})
             .attr("fill", d => {return yCol(d.variable)})
             .attr("y",innerHeight) 
             .attr("height",0)
@@ -250,9 +243,6 @@ export const d3barchart = (svg,
             .transition()
             .duration(animate.in ? 1000 :0) 
                 .attr("x",(d,i) => xScale.bandwidth()/y_names.length * i)
-                //.attr("y",0) 
-                //.attr("y", d => {return yScale(d.value)})
-                //.attr("fill", d => {return yCol(d.variable)})
                 .attr("height", (d,i) => {return (innerHeight - yScale(d.value))})
                 .attr("width", xScale.bandwidth()/y_names.length)
                 .attr("y", d => {return yScale(d.value)}) 

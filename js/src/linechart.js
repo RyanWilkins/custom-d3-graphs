@@ -29,9 +29,6 @@ function hover(svg, path, data, xScale, yScale, mLeft, mTop) {
         .on("mouseleave", e => left(e));
   
     const dot = d3.select('#highlightDot')
-
-    /*const dot = svg.append("g")
-        .attr("display", "none");*/
   
     dot.append("circle")
         .attr("r", 2.5)
@@ -198,6 +195,7 @@ export const d3linechart = (svg,
         .append("text")  
             .attr("class", "axisLabel xaxislabel")
             .attr("transform", `translate(${innerWidth/2},${innerHeight + margin.bottom*.8})`)
+            .attr("text-anchor", "middle")
             .text(axis.x)
         .merge(xlabel)
             .text(axis.x)
@@ -243,7 +241,6 @@ export const d3linechart = (svg,
         var vals = []
         data.forEach(function(v,j){
             vals.push(v[d])
-            //console.log(v[d])
         })
         temp.values = [...vals]
         longData.push(Object.assign({},temp))
@@ -291,10 +288,6 @@ export const d3linechart = (svg,
         console.log(this.node().getTotalLength())
         console.log("Ran")
     })
-    //const pathLength = lineGroup.forEach().node().getTotalLength()
-    //console.log(pathLength)
-    /*graphMerge.selectAll("path")
-        .attr("test", d => {return console.log(d)})*/
 
         graphEnter.append("g")
                 .attr("id","highlightDot")

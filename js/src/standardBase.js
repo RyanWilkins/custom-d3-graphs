@@ -54,13 +54,11 @@ export const standardLegend = (graph,
         .attr('fill', d => colorMap(d))
         .attr('width', mobile ? legendDim.rectWidth : legendDim.boxDim)
         .attr('height', legendDim.boxDim + (mobile ? legendDim.textPx : 0))
-        //.attr('y', d => (legendScale(d) - (mobile ? legendDim.textPx/2 : 0)))
 
     legendEntry.append('text')
         .attr('class', 'legendLabel')
         .text(d => d)
         .attr('x', mobile ? legendDim.rectWidth/2 : (legendDim.boxDim + legendDim.labelPad) ) 
-        //.attr('y', d => legendScale(d) + legendDim.boxDim/2)
         .attr("text-anchor", mobile ? "middle" : "left")
 
             

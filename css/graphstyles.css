@@ -40,12 +40,12 @@
 
 .legendLabel{
   alignment-baseline: middle;
-  font-size:14px;
+  font-size:10px;
 }
 
 .legendSquare{
   stroke:#353839;
-  stroke-width: 2px;
+  stroke-width: 1px;
 }
 
 /* Font sizes based on device size */

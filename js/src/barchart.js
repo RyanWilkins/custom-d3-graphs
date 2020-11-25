@@ -55,7 +55,7 @@ export const d3barchart = (svg,
                             dims = {height : 100, width : 100}, 
                             perc_margin = {top: 10, bottom: 15, left: 15, right: 1},
                             showLegend = true,
-                            perc_legendDim = {boxDim:1.5, labelPad: 1, xStart:85, yStart: 0, legendHeight: 20},
+                            perc_legendDim = {boxDim:2, labelPad: 1, xStart:85, yStart: 0, legendHeight: 20, textPx: 12},
                             highlighter = true,
                             animate = {in:true, out:true}
                             } 
@@ -76,7 +76,8 @@ export const d3barchart = (svg,
         labelPad: perc_legendDim.labelPad/100*width,
         xStart: perc_legendDim.xStart/100,
         yStart: perc_legendDim.yStart/100,
-        legendHeight: perc_legendDim.legendHeight/100*height
+        legendHeight: perc_legendDim.legendHeight/100*height,
+        textPx: perc_legendDim.textPx
     }
 
     // Define Scales
@@ -275,11 +276,13 @@ export const d3barchart = (svg,
             xOffset: innerWidth + margin.right,
             yOffset: height * legendDim.yStart + margin.top,
             boxDim: legendDim.boxDim,
+            rectWidth: dims.width*(1-perc_legendDim.xStart/100) - margin.right,
             labelPad: legendDim.labelPad,
-            legendHeight: legendDim.legendHeight
+            legendHeight: legendDim.legendHeight,
+            textPx: legendDim.textPx
         }
         //console.log(y_names)
-        standardLegend(graphMerge, graph_id, y_names, yCol, legendDimAdj)
+        standardLegend(graphMerge, graph_id, y_names, yCol, legendDimAdj, width < 768)
 
     }
 

@@ -16,7 +16,8 @@ export const standardLegend = (graph,
                         graph_id,
                         entries,
                         colorMap,
-                        legendDim = {xOffset:0, yOffset:0, boxDim:15, labelPad:5, legendHeight:100},) => {
+                        legendDim = {xOffset:0, yOffset:0, boxDim:15, rectWidth: 10, labelPad:5, legendHeight:100, textPx:12},
+                        mobile = false) => {
 // Create height scale
     var legendScale = d3.scaleBand()
                         .domain(entries)
@@ -47,28 +48,31 @@ export const standardLegend = (graph,
             .append('g')
             .attr("class", "legendEntry")
 
+    // Squares if desktop, rectangles if mobile
     legendEntry.append('rect')
         .attr('class', 'legendSquare')
         .attr('fill', d => colorMap(d))
-        .attr('width', legendDim.boxDim)
-        .attr('height', legendDim.boxDim)
-        .attr('y', d => legendScale(d))
+        .attr('width', mobile ? legendDim.rectWidth : legendDim.boxDim)
+        .attr('height', legendDim.boxDim + (mobile ? legendDim.textPx : 0))
+        //.attr('y', d => (legendScale(d) - (mobile ? legendDim.textPx/2 : 0)))
 
     legendEntry.append('text')
         .attr('class', 'legendLabel')
         .text(d => d)
-        .attr('x', legendDim.boxDim + legendDim.labelPad)  
-        .attr('y', d => legendScale(d) + legendDim.boxDim/2)
+        .attr('x', mobile ? legendDim.rectWidth/2 : (legendDim.boxDim + legendDim.labelPad) ) 
+        //.attr('y', d => legendScale(d) + legendDim.boxDim/2)
+        .attr("text-anchor", mobile ? "middle" : "left")
+
             
     legend.exit().remove()
 
     var legendUpdate =legendEntry.merge(legend)
 
     legendUpdate.select('rect')
-        .attr('y', d => legendScale(d))
+        .attr('y', d => (legendScale(d) - (mobile ? legendDim.textPx*3/4  : 0)))
 
     legendUpdate.select('text')
-    .attr('y', d => legendScale(d) + legendDim.boxDim/2)
+        .attr('y', d => legendScale(d) + legendDim.boxDim/2 )
 
                         }
 

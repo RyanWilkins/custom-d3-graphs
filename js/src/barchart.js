@@ -65,7 +65,7 @@ export const d3barchart = (svg,
 
     const height = dims.height;
     const width = showLegend 
-                    ? dims.width * perc_legendDim.xStart/100
+                    ? dims.width * (perc_legendDim.xStart ? perc_legendDim.xStart : 85) / 100
                     : dims.width ;
     const margin = {top: perc_margin.top/100 * height,
                     bottom: perc_margin.bottom/100 * height,
@@ -74,11 +74,11 @@ export const d3barchart = (svg,
     const innerHeight = height - margin.top - margin.bottom;
     const innerWidth = width - margin.left - margin.right;
     const legendDim = {
-        boxDim: (perc_legendDim.boxDim ? perc_legendDim.boxDim : 2)/100*width  ,
-        labelPad: (perc_legendDim.labelPad ? perc_legendDim.labelPad : 1)/100*width,
-        xStart: (perc_legendDim.xStart ? perc_legendDim.xStart : 85 ) /100,
-        yStart: (perc_legendDim.yStart ? perc_legendDim.yStart : 0)/100,
-        legendHeight: (perc_legendDim.legendHeight ? perc_legendDim.legendHeight : 20)/100*height,
+        boxDim: (perc_legendDim.boxDim ? perc_legendDim.boxDim : 2) / 100 * width,
+        labelPad: (perc_legendDim.labelPad ? perc_legendDim.labelPad : 1) / 100 * width,
+        xStart: (perc_legendDim.xStart ? perc_legendDim.xStart : 85 ) / 100,
+        yStart: (perc_legendDim.yStart ? perc_legendDim.yStart : 0) / 100,
+        legendHeight: (perc_legendDim.legendHeight ? perc_legendDim.legendHeight : 20) / 100 * height,
         textPx: (perc_legendDim.textPx ? perc_legendDim.textPx : 12)
     }
 
@@ -276,7 +276,7 @@ export const d3barchart = (svg,
             xOffset: innerWidth + margin.right,
             yOffset: height * legendDim.yStart + margin.top,
             boxDim: legendDim.boxDim,
-            rectWidth: dims.width*(1-perc_legendDim.xStart/100) - margin.right,
+            rectWidth: dims.width*(1-legendDim.xStart) - margin.right,
             labelPad: legendDim.labelPad,
             legendHeight: legendDim.legendHeight,
             textPx: legendDim.textPx

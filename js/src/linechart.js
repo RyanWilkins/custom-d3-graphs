@@ -75,7 +75,7 @@ export const d3linechart = (svg,
     {
         axis = {x: null, y: null},
         axis_format = {
-            x: {ticks: null, tickFormat: null, tickValues: null, scale: null, domain:null}, 
+            x: {ticks: null, tickFormat: null, tickValues: null, scale: null, domain: null}, 
             y: {ticks: null, tickFormat: null, tickValues: null, scale: null, domain: null}
         },
         dims = {height : 100, width : 100}, 
@@ -98,12 +98,12 @@ export const d3linechart = (svg,
     const innerHeight = height - margin.top - margin.bottom;
     const innerWidth = width - margin.left - margin.right;
     const legendDim = {
-        boxDim: perc_legendDim.boxDim/100*width,
-        labelPad: perc_legendDim.labelPad/100*width,
-        xStart: perc_legendDim.xStart/100,
-        yStart: perc_legendDim.yStart/100,
-        legendHeight: perc_legendDim.legendHeight/100*height,
-        textPx: perc_legendDim.textPx
+        boxDim: (perc_legendDim.boxDim ? perc_legendDim.boxDim : 2)/100*width  ,
+        labelPad: (perc_legendDim.labelPad ? perc_legendDim.labelPad : 1)/100*width,
+        xStart: (perc_legendDim.xStart ? perc_legendDim.xStart : 85 ) /100,
+        yStart: (perc_legendDim.yStart ? perc_legendDim.yStart : 0)/100,
+        legendHeight: (perc_legendDim.legendHeight ? perc_legendDim.legendHeight : 20)/100*height,
+        textPx: (perc_legendDim.textPx ? perc_legendDim.textPx : 12)
     }
 
     // Define Scales
@@ -113,7 +113,11 @@ export const d3linechart = (svg,
 
     xScale.range([0,innerWidth])
 
-    var yScale = d3.scaleLinear().range([innerHeight,0]);
+    var yScale = axis_format.y.scale
+                    ? axis_format.y.scale
+                    : d3.scaleLinear()
+                    
+    yScale.range([innerHeight,0]);
 
     // Start building the graph
     var graph = svg.selectAll(".standardLineChart")
@@ -168,7 +172,10 @@ export const d3linechart = (svg,
         y_values.push(data.map(item => {return item[y_names[i]]}))
     }
     var y_max = Math.max(...y_values.map(item => {return Math.max(...item);}));
-    yScale.domain([0, y_max])
+    
+    axis_format.y.domain
+        ? yScale.domain(axis_format.y.domain)
+        : yScale.domain([0, y_max])
     
     // Color Scale for y values
     var yCol = d3.scaleOrdinal()

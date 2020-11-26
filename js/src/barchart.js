@@ -50,7 +50,10 @@ export const d3barchart = (svg,
                             graph_id,
                             {
                             axis = {x: null, y: null}, 
-                            axis_format = {x: {ticks: null, tickFormat: null, tickValues: null}, y: {ticks: null, tickFormat: null, tickValues: null}},
+                            axis_format = {
+                                x: {ticks: null, tickFormat: null, tickValues: null, domain: null}, 
+                                y: {ticks: null, tickFormat: null, tickValues: null, domain: null}
+                            },                            
                             dims = {height : 100, width : 100}, 
                             perc_margin = {top: 10, bottom: 15, left: 15, right: 1},
                             showLegend = true,
@@ -71,12 +74,12 @@ export const d3barchart = (svg,
     const innerHeight = height - margin.top - margin.bottom;
     const innerWidth = width - margin.left - margin.right;
     const legendDim = {
-        boxDim: perc_legendDim.boxDim/100*width,
-        labelPad: perc_legendDim.labelPad/100*width,
-        xStart: perc_legendDim.xStart/100,
-        yStart: perc_legendDim.yStart/100,
-        legendHeight: perc_legendDim.legendHeight/100*height,
-        textPx: perc_legendDim.textPx
+        boxDim: (perc_legendDim.boxDim ? perc_legendDim.boxDim : 2)/100*width  ,
+        labelPad: (perc_legendDim.labelPad ? perc_legendDim.labelPad : 1)/100*width,
+        xStart: (perc_legendDim.xStart ? perc_legendDim.xStart : 85 ) /100,
+        yStart: (perc_legendDim.yStart ? perc_legendDim.yStart : 0)/100,
+        legendHeight: (perc_legendDim.legendHeight ? perc_legendDim.legendHeight : 20)/100*height,
+        textPx: (perc_legendDim.textPx ? perc_legendDim.textPx : 12)
     }
 
     // Define Scales
@@ -118,7 +121,9 @@ export const d3barchart = (svg,
     var x_name = data.columns[0]
     var x_values = data.map(item => {return item[x_name]})
     // Discrete Bars
-    xScale.domain(x_values)
+    axis_format.x.domain
+        ? xScale.domain(axis_format.x.domain)
+        : xScale.domain(x_values)
 
     // y_names will be what goes into a legend
     // Find the max of all y_values to get domain for y
@@ -131,7 +136,10 @@ export const d3barchart = (svg,
         y_values.push(data.map(item => {return item[y_names[i]]}))
     }
     var y_max = Math.max(...y_values.map(item => {return Math.max(...item);}));
-    yScale.domain([0, y_max])
+
+    axis_format.y.domain
+        ? yScale.domain(axis_format.y.domain)
+        : yScale.domain([0, y_max])
     
     // Color Scale for y values
     var yCol = d3.scaleOrdinal()
@@ -145,9 +153,9 @@ export const d3barchart = (svg,
         .data([null])
 
     var xaxfunc = d3.axisBottom(xScale)
-                .tickFormat(axis_format.x.tickFormat)
-                .ticks(axis_format.x.ticks)
-                .tickValues(axis_format.x.tickValues)
+                .tickFormat(axis_format.x.tickFormat ? axis_format.x.tickFormat : null)
+                .ticks(axis_format.x.ticks ? axis_format.x.ticks : null)
+                .tickValues(axis_format.x.tickValues ? axis_format.x.tickValues : null)
 
     xaxis.enter()
         .append("g")
@@ -182,9 +190,9 @@ export const d3barchart = (svg,
         .data([null])
 
     var yaxfunc = d3.axisLeft(yScale)
-        .tickFormat(axis_format.y.tickFormat)
-        .ticks(axis_format.y.ticks)
-        .tickValues(axis_format.y.tickValues)
+        .tickFormat(axis_format.y.tickFormat ? axis_format.y.tickFormat : null)
+        .ticks(axis_format.y.ticks ? axis_format.y.ticks : null)
+        .tickValues(axis_format.y.tickValues ? axis_format.y.tickValues : null)
 
     yaxis.enter()
         .append("g")

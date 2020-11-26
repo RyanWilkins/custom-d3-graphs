@@ -132,7 +132,7 @@ const linetestdata =  d3.csv("../testdata/catdata.csv").then((data) => {
         axis: {x: "My X Values", y: "My Y Value"},
         dims: {height : +lnsvg.attr("height"), width : +lnsvg.attr("width")},
         axis_format: {
-            x: {tickFormat: d3.format(".0f"), ticks: null, tickValues: [2011,2012,2013,2014,2015,2016]}, 
+            x: {tickFormat: d3.format(".0f"), tickValues: [2011,2012,2013,2014,2015, 2016]}, 
             y: {tickFormat: d3.format(".0f"), ticks:10}}
     }
 

@@ -79,7 +79,7 @@ export const seriesHighlights = (graph,
                                     selector) => {
 
         graph.selectAll(selector)
-        .on('mouseover', function(d,i){
+        .on('mouseover touchstart', function(d,i){
         var cur_series = d3.select(this).attr('class').split(" ").filter(v => {return /__series/.test(v)});
         d3.selectAll("." + cur_series).transition()
         .duration(100)
@@ -87,7 +87,7 @@ export const seriesHighlights = (graph,
         })
 
         graph.selectAll(selector)
-        .on('mouseout', function(d,i){
+        .on('mouseout touchend', function(d,i){
         var cur_series = d3.select(this).attr('class').split(" ").filter(v => {return /__series/.test(v)});
         d3.selectAll("." + cur_series).transition()
         .duration(100)

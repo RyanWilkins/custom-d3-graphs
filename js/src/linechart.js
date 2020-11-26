@@ -20,13 +20,13 @@ function hover(svg, path, data, xScale, yScale, mLeft, mTop) {
   
     if ("ontouchstart" in document) svg
         .style("-webkit-tap-highlight-color", "transparent")
-        .on("touchmove", e => moved(e))
-        .on("touchstart", e => entered(e))
-        .on("touchend", e => left(e))
+        .on("touchmove", moved)
+        .on("touchstart", entered)
+        .on("touchend", left)
     else svg
-        .on("mousemove", e => moved(e))
-        .on("mouseenter", e => entered(e))
-        .on("mouseleave", e => left(e));
+        .on("mousemove", moved)
+        .on("mouseenter", entered)
+        .on("mouseleave", left);
   
     const dot = d3.select('#highlightDot')
   
@@ -38,21 +38,25 @@ function hover(svg, path, data, xScale, yScale, mLeft, mTop) {
         .attr("text-anchor", "middle")
         .attr("y", -8);
   
-    function moved(event) {
-     //console.log(event)
-      event.preventDefault();
-      const pointer = d3.pointer(event, this);
-      //console.log(pointer)
-      const xm = xScale.invert(pointer[0]-mLeft);
-      const ym = yScale.invert(pointer[1]-mTop);
-      //console.log(xm,ym)
-      const i = d3.bisectCenter(data.x_vals, xm);
-      //console.log(i)
-      const s = d3.least(data.series, d => Math.abs(d.values[i] - (ym)));
-      //console.log(mLeft,mTop)
-      path.attr("opacity", d => d === s ? 1 : 0.5).filter(d => d === s).raise();
-      dot.attr("transform", `translate(${xScale(data.x_vals[i])},${yScale(s.values[i])})`);
-      dot.select("text").text(s.values[i]);
+    function moved(e) {
+        //console.log(e)
+        e.preventDefault();
+        //console.log(this)
+        var elm = $(this).offset();
+        const pointer = (e.type == "touchmove") 
+                            ? [e.targetTouches[0].pageX - elm.left , e.targetTouches[0].pageY - elm.top]
+                            : d3.pointer(event, this);
+        //console.log(pointer)
+        const xm = xScale.invert(pointer[0] - mLeft);
+        const ym = yScale.invert(pointer[1] - mTop);
+        //console.log(xm,ym)
+        const i = d3.bisectCenter(data.x_vals, xm);
+        //console.log(i)
+        const s = d3.least(data.series, d => Math.abs(d.values[i] - (ym)));
+        //console.log(mLeft,mTop)
+        path.attr("opacity", d => d === s ? 1 : 0.5).filter(d => d === s).raise();
+        dot.attr("transform", `translate(${xScale(data.x_vals[i])},${yScale(s.values[i])})`);
+        dot.select("text").text(s.values[i]);
     }
   
     function entered(event) {
@@ -106,7 +110,7 @@ export const d3linechart = (svg,
         textPx: (perc_legendDim.textPx ? perc_legendDim.textPx : 12)
     }
 
-    console.log(legendDim)
+    //console.log(legendDim)
 
     // Define Scales
     var xScale = axis_format.x.scale

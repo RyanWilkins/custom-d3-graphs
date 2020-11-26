@@ -145,7 +145,7 @@ export const d3barchart = (svg,
         .data([null])
 
     var xaxfunc = d3.axisBottom(xScale)
-                .tickFormat(axis_format.x.tickFormat === null ? null: d3.format(axis_format.x.tickFormat))
+                .tickFormat(axis_format.x.tickFormat)
                 .ticks(axis_format.x.ticks)
                 .tickValues(axis_format.x.tickValues)
 
@@ -182,7 +182,7 @@ export const d3barchart = (svg,
         .data([null])
 
     var yaxfunc = d3.axisLeft(yScale)
-        .tickFormat(axis_format.y.tickFormat === null ? null: d3.format(axis_format.y.tickFormat))
+        .tickFormat(axis_format.y.tickFormat)
         .ticks(axis_format.y.ticks)
         .tickValues(axis_format.y.tickValues)
 

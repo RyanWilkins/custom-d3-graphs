@@ -74,7 +74,10 @@ export const d3linechart = (svg,
     graph_id, 
     {
         axis = {x: null, y: null},
-        axis_format = {x: {ticks: null, tickFormat: null, tickValues: null}, y: {ticks: null, tickFormat: null, tickValues: null}},
+        axis_format = {
+            x: {ticks: null, tickFormat: null, tickValues: null, scale: null, domain:null}, 
+            y: {ticks: null, tickFormat: null, tickValues: null, scale: null, domain: null}
+        },
         dims = {height : 100, width : 100}, 
         perc_margin = {top: 10, bottom: 15, left: 15, right: 1},
         showLegend = true,
@@ -104,9 +107,13 @@ export const d3linechart = (svg,
     }
 
     // Define Scales
-    var xScale = d3.scaleLinear().range([0,innerWidth]);
-    var yScale = d3.scaleLinear().range([innerHeight,0]);
+    var xScale = axis_format.x.scale
+                    ? axis_format.x.scale
+                    : d3.scaleLinear();
 
+    xScale.range([0,innerWidth])
+
+    var yScale = d3.scaleLinear().range([innerHeight,0]);
 
     // Start building the graph
     var graph = svg.selectAll(".standardLineChart")
@@ -145,8 +152,10 @@ export const d3linechart = (svg,
     var x_name = data.columns[0]
     var x_values = data.map(item => {return item[x_name]})
     
-    // x Scale from min x to max x
-    xScale.domain([Math.min(...x_values),Math.max(...x_values)])
+    // x Scale from min x to max x as default
+    axis_format.x.domain
+        ? xScale.domain(axis_format.x.domain)
+        : xScale.domain([Math.min(...x_values),Math.max(...x_values)])
 
     // y_names will be what goes into a legend
     // Find the max of all y_values to get domain for y
@@ -170,7 +179,7 @@ export const d3linechart = (svg,
 
     // x axis
     var xaxfunc = d3.axisBottom(xScale)
-                    .tickFormat(axis_format.x.tickFormat === null ? null: d3.format(axis_format.x.tickFormat))
+                    .tickFormat(axis_format.x.tickFormat)
                     .ticks(axis_format.x.ticks)
                     .tickValues(axis_format.x.tickValues)
 
@@ -208,7 +217,7 @@ export const d3linechart = (svg,
         .data([null])
 
     var yaxfunc = d3.axisLeft(yScale)
-        .tickFormat(axis_format.y.tickFormat === null ? null: d3.format(axis_format.y.tickFormat))
+        .tickFormat(axis_format.y.tickFormat)
         .ticks(axis_format.y.ticks)
         .tickValues(axis_format.y.tickValues)
 

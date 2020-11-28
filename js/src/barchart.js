@@ -282,7 +282,7 @@ export const d3barchart = (svg,
             textPx: legendDim.textPx
         }
         //console.log(y_names)
-        standardLegend(graphMerge, graph_id, y_names, yCol, legendDimAdj, width < 768)
+        standardLegend(graphMerge, graph_id, y_names, yCol, legendDimAdj, legendDimAdj.rectWidth < 75)
 
     }
 

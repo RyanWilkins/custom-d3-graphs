@@ -59,7 +59,8 @@ export const d3barchart = (svg,
                             showLegend = true,
                             perc_legendDim = {boxDim:2, labelPad: 1, xStart:85, yStart: 0, legendHeight: 20, textPx: 12},
                             highlighter = true,
-                            animate = {in:true, out:true}
+                            animate = {in:true, out:true},
+                            bare = false
                             } 
                             ) => {
 
@@ -219,10 +220,8 @@ export const d3barchart = (svg,
             .attr("text-anchor","middle")
 
     // Append data to bar chart
-    const barStart = graphMerge.selectAll('.graphXGroup')
-        .data(data, (e) => {
-            return (x_name + e[x_name]);
-        })
+    // TODO: I feel like the data[0] line shouldn't work... it doesn't throw any errors though
+    const barStart = graphMerge.selectAll('.graphXGroup').data(data, (e) => {return (x_name + e[x_name]);})
         
     const barEnter = barStart.enter()
 
@@ -254,7 +253,8 @@ export const d3barchart = (svg,
             .duration(animate.in ? 1000 :0) 
                 .attr("x",(d,i) => xScale.bandwidth()/y_names.length * i)
                 .attr("height", (d,i) => {return (innerHeight - yScale(d.value))})
-                .attr("width", xScale.bandwidth()/y_names.length)
+                // make width of bars zero if we just want bare graph
+                .attr("width", bare ? 0 : xScale.bandwidth()/y_names.length)
                 .attr("y", d => {return yScale(d.value)}) 
 
             

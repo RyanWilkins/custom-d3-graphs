@@ -112,7 +112,8 @@ $(document).ready(() => {
                 legendHeight: 40,
                 xStart: 92
             },
-            animate: {in: false, out: false}
+            animate: {in: false, out: false},
+            bare: true
         }
 
         d3.csv("../testdata/cv_dth_six_states.csv").then((data) => {
@@ -141,41 +142,49 @@ $(document).ready(() => {
 
 
 
-// // bar chart test code
-// $(document).ready(() => {
-// const testdata =  d3.csv("../testdata/catdata.csv").then((data) => {
+// bar chart test code
+$(document).ready(() => {
+const testdata =  d3.csv("../testdata/catdata.csv").then((data) => {
 
-//     var graphic_width = window.innerWidth*0.9
-//     bcsvg.attr("width", graphic_width).attr("height", graphic_width < 768 ? graphic_width : graphic_width*0.5)
+    var graphic_width = window.innerWidth*0.9
+    bcsvg.attr("width", graphic_width).attr("height", graphic_width < 768 ? graphic_width : graphic_width*0.5)
 
-//     var bc_parms =         {
-//                             axis : {x:"Year", y:"Value"},
-//                             dims : {height : +bcsvg.attr("height"), width : +bcsvg.attr("width")},
-//                             animate : {in:true, out:true}
-//                             }
-//     d3barchart(bcsvg, data, "mybc", bc_parms)
+    var bc_parms =         {
+                            axis : {x:"Year", y:"Value"},
+                            dims : {height : +bcsvg.attr("height"), width : +bcsvg.attr("width")},
+                            animate : {in:true, out:true},
+                            bare: true
+                            }
+    d3barchart(bcsvg, data, "mybc", bc_parms)
 
-//     var datathree = Object.assign(data)
-//     var datatwo = data.map(x => {var y = Object.assign({},x);
-//                                 y.key3 = y.value*2;
-//                                 return y;
-//                             })
-//     datatwo.columns = [...data.columns]
-//     datatwo.columns.push("key3")
+    setTimeout (() => {
+        bc_parms.bare = false
+        d3barchart(bcsvg, data, "mybc", bc_parms);
+    },2000) 
 
-//     for (var i = 0; i < data.length;i++){
-//         delete data[i].otherval
-//     }
+    var datathree = Object.assign(data)
+    var datatwo = data.map(x => {var y = Object.assign({},x);
+                                y.key3 = y.value*2;
+                                return y;
+                            })
+    datatwo.columns = [...data.columns]
+    datatwo.columns.push("key3")
 
-//     setTimeout (() => {
-//         d3barchart(bcsvg, data, "mybc", bc_parms);
-//     },3000) 
-//     setTimeout (() => { 
-//         d3barchart(bcsvg, datatwo, "mybc", bc_parms);
-//     },5000) 
+    for (var i = 0; i < data.length;i++){
+        delete data[i].otherval
+    }
+
+    setTimeout (() => {
+        bc_parms.bare = false
+        d3barchart(bcsvg, data, "mybc", bc_parms);
+    },5000) 
+    setTimeout (() => { 
+        d3barchart(bcsvg, datatwo, "mybc", bc_parms);
+    },6000) 
 
  
-// })
+})
+})
 
 // // line chart test code
 // const linetestdata =  d3.csv("../testdata/catdata.csv").then((data) => {
@@ -202,7 +211,7 @@ $(document).ready(() => {
 
 // //const datasource = "../testdata/catdata.csv";
 
-// const bcsvg = d3.select('#bar-chart');
+ const bcsvg = d3.select('#bar-chart');
 // const lnsvg = d3.select('#line-chart');
 
 // })

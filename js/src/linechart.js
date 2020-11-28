@@ -87,7 +87,8 @@ export const d3linechart = (svg,
         showLegend = true,
         perc_legendDim = {boxDim:2, labelPad: 1, xStart:85, yStart: 0, legendHeight: 20, textPx: 12},
         highlighter = true,
-        animate = {in:true, out:true}
+        animate = {in:true, out:true},
+        bare = false,
     }
     ) => {
 
@@ -270,7 +271,9 @@ export const d3linechart = (svg,
         longData.push(Object.assign({},temp))
     })
 
-    var chartData = {y:"y_value", x_vals: x_values, series:longData}
+    var chartData = bare 
+            ? {y:"y_value", x_vals: x_values, series:[]}
+            : {y:"y_value", x_vals: x_values, series:longData}
  
     var genLine = d3.line()
         .x(function(d,i) {return xScale(chartData.x_vals[i])})
